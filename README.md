@@ -1,1 +1,3 @@
-# Etkot Discord Bot V.2.0
+# Etkot Discord Music Bot
+
+A music bot for Discord using discordjs v13
