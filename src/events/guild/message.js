@@ -9,6 +9,8 @@ module.exports = (Discord, client, message) => {
     const command =
         client.commands.get(commandName) || client.commands.find((a) => a.aliases && a.aliases.includes(commandName));
 
+    if (!command) return;
+
     try {
         command.execute(message, args, commandName, client, Discord);
     } catch (err) {
