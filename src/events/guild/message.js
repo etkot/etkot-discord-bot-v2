@@ -14,7 +14,7 @@ module.exports = (Discord, client, message) => {
     try {
         command.execute(message, args, commandName, client, Discord);
     } catch (err) {
-        message.reply('There was an error trying to execute that command');
+        message.reply('nyt en ymmärrä,, keitän teetä itselleni t. spagetbot');
         console.error(err);
     }
 };
