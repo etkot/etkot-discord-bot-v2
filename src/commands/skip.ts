@@ -7,6 +7,8 @@ const skip: Command = {
     aliases: ['s', 'next'],
     description: 'Skips the current song',
     execute: async (message, args, cmd, client) => {
+        if (!message.guild) return;
+
         const voiceChannel = message.member?.voice.channel;
         if (!voiceChannel) return message.channel.send('You need to be in a voice channel to use this command!');
 

@@ -13,11 +13,7 @@ const videoFinder = async (query: string) => {
 
 export const videoPlayer = async (guild: Discord.Guild, song: Song) => {
     const songQueue = queue.get(guild.id);
-
-    if (!song) {
-        queue.delete(guild.id);
-        return;
-    }
+    if (!songQueue) return;
 
     const stream = ytdl(song.url, { filter: 'audioonly' });
 
@@ -40,6 +36,8 @@ const play: Command = {
     aliases: ['p'],
     description: 'Plays a song from YouTube',
     execute: async (message, args, cmd, client) => {
+        if (!message.guild) return;
+
         const voiceChannel = message.member?.voice.channel;
         if (!voiceChannel) return message.channel.send('You need to be in a voice channel to use this command!');
 
@@ -74,16 +72,6 @@ const play: Command = {
             return message.channel.send(`**${song.title}** added to queue!`);
         }
 
-        const queueConstructor: Queue = {
-            voice_channel: voiceChannel,
-            text_channel: message.channel,
-            connection: null,
-            songs: [],
-        };
-
-        queue.set(message.guild?.id as string, queueConstructor);
-        queueConstructor.songs.push(song);
-
         try {
             const connection = joinVoiceChannel({
                 channelId: voiceChannel.id,
@@ -91,7 +79,16 @@ const play: Command = {
                 adapterCreator: voiceChannel.guild.voiceAdapterCreator,
             });
 
-            queueConstructor.connection = connection;
+            const queueConstructor: Queue = {
+                voice_channel: voiceChannel,
+                text_channel: message.channel,
+                connection,
+                songs: [],
+            };
+
+            queue.set(message.guild?.id as string, queueConstructor);
+            queueConstructor.songs.push(song);
+
             videoPlayer(message.guild, queueConstructor.songs[0]);
         } catch (err) {
             queue.delete(message.guild?.id as string);
