@@ -1,7 +1,7 @@
 {
-    "name": "etkot-discord-music-bot",
+    "name": "etkot-discord-bot-v2",
     "version": "1.0.0",
-    "description": "Etkot Discord Music Bot",
+    "description": "Etkot Discord Bot V2",
     "main": "src/index.js",
     "scripts": {
         "start": "ts-node-dev src",
