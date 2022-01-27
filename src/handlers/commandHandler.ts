@@ -1,22 +1,16 @@
-import fs from 'fs';
 import Client from '../types/client';
-import getFolders from '../utils/getFolders';
+import getFiles from '../utils/getFiles';
+import path from 'path';
+
+const commandsPath = path.join(__dirname, '../commands');
 
 const handler = async (client: Client) => {
-    const commandPaths: string[] = [];
+    const commands: string[] = await getFiles(commandsPath);
 
-    const folders = await getFolders(`src/commands`);
-    folders.push('src/commands');
-    for (const folder of folders) {
-        fs.readdirSync(folder).filter((file) => {
-            if (file.endsWith('.ts')) {
-                commandPaths.push(`${folder.replace('src', '..')}/${file}`);
-            }
-        });
-    }
+    console.log(`Loading ${commands.length} commands`);
 
-    for (const path of commandPaths) {
-        const command = require(`${path}`).default;
+    for (const path of commands) {
+        const command = require(path).default;
         if (command.name) {
             client.commands.set(command.name, command);
         }
