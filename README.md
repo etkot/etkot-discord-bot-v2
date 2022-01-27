@@ -1,6 +1,6 @@
 # Etkot Discord Music Bot
 
-A music bot for Discord using discordjs v13
+Brand spanking new Etkot Discord bot V2
 
 # Usage
 Before starting you will need to create a file called `.env` with the following fields
