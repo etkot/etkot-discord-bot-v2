@@ -1,4 +1,4 @@
-# Etkot Discord Music Bot
+# Etkot Discord Bot V2
 
 Brand spanking new Etkot Discord bot V2
 
