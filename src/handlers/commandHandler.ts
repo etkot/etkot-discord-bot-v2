@@ -1,12 +1,22 @@
-import fs from 'fs/promises';
+import fs from 'fs';
 import Client from '../types/client';
+import getFolders from '../utils/getFolders';
 
 const handler = async (client: Client) => {
-    const files = await fs.readdir(`src/commands/`);
-    const eventFiles = files.filter((file) => file.endsWith('.ts'));
+    const commandPaths: string[] = [];
 
-    for (const fileName of eventFiles) {
-        const command = require(`../commands/${fileName}`);
+    const folders = await getFolders(`src/commands`);
+    folders.push('src/commands');
+    for (const folder of folders) {
+        fs.readdirSync(folder).filter((file) => {
+            if (file.endsWith('.ts')) {
+                commandPaths.push(`${folder.replace('src', '..')}/${file}`);
+            }
+        });
+    }
+
+    for (const path of commandPaths) {
+        const command = require(`${path}`).default;
         if (command.name) {
             client.commands.set(command.name, command);
         }

@@ -2,9 +2,9 @@ import { AudioPlayerStatus, createAudioPlayer, createAudioResource, joinVoiceCha
 import Discord from 'discord.js';
 import ytSearch from 'yt-search';
 import ytdl from 'ytdl-core';
-import Command from '../types/command';
-import { Queue, Song } from '../types/music';
-import queue from '../utils/queue';
+import Command from '../../types/command';
+import { Queue, Song } from '../../types/music';
+import queue from '../../utils/queue';
 
 const videoFinder = async (query: string) => {
     const video_result = await ytSearch(query);

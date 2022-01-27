@@ -11,14 +11,14 @@ const handler: EventHandler = async (client, message) => {
     const command = client.commands.get(commandName) || client.commands.find((a) => a.aliases?.includes(commandName));
 
     if (!command) {
-        message.reply('nyt en ymmärrä,, keitän teetä itselleni t. spagetbot');
+        message.reply('Nyt en ymmärrä,, keitän teetä itselleni t. spagetbot');
         return;
     }
 
     try {
         command.execute(message, args, commandName, client);
     } catch (err) {
-        message.reply('jotain meni pieleen, kokeile uudestaan');
+        message.reply('Jotain meni pieleen, kokeile uudestaan');
         console.error(err);
     }
 };
