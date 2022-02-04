@@ -21,7 +21,7 @@ const detectLanguage = async (text: string) => {
         return response[0][2];
     } catch (error) {
         console.log(error);
-        return 'en';
+        return 'fi';
     }
 };
 
