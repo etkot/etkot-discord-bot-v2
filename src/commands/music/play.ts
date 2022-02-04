@@ -15,7 +15,7 @@ export const videoPlayer = async (guild: Discord.Guild, song: Song) => {
     const songQueue = queue.get(guild.id);
     if (!songQueue) return;
 
-    const stream = ytdl(song.url, { filter: 'audioonly' });
+    const stream = ytdl(song.url, { filter: 'audioonly', quality: 94 });
 
     const player = createAudioPlayer();
     const resource = createAudioResource(stream);
