@@ -45,8 +45,10 @@ const tts: Command = {
         if (!args.length) return message.channel.send('You need to provide text for the bot to say!');
 
         // Google TTS API is limited to 200 characters per request
-        args.slice(199);
-        const text: string = args.join(' ');
+        const text = args
+            .join(' ')
+            .replace(/[-[\]{}()*+?.,<>\\^$|#\s]/g, '\\$&')
+            .slice(0, 199);
 
         const lang = await detectLanguage(text);
         const base64 = await googleTTS.getAudioBase64(text, {
