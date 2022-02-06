@@ -8,19 +8,23 @@ import queue from '../../utils/queue';
 
 const videoFinder = async (query: string) => {
     const video_result = await ytSearch(query);
-    return video_result.videos.length > 1 ? video_result.videos[0] : null;
+    return video_result.all.length > 1 ? video_result.all[0].url : '';
 };
 
 export const videoPlayer = async (guild: Discord.Guild, song: Song) => {
     const songQueue = queue.get(guild.id);
     if (!songQueue) return;
 
-    // This doesn't support live streams :(
-    // qualitys 91 - 95 would work
-    const stream = ytdl(song.url, { filter: 'audioonly' });
+    const stream = async () => {
+        let info = await ytdl.getInfo(song.url);
+        if (song.isLive) {
+            const format = ytdl.chooseFormat(info.formats, { quality: [128, 127, 120, 96, 95, 94, 93] });
+            return format.url;
+        } else return ytdl.downloadFromInfo(info, { filter: 'audioonly' });
+    };
 
     const player = createAudioPlayer();
-    const resource = createAudioResource(stream);
+    const resource = createAudioResource(await stream());
 
     songQueue.connection.subscribe(player);
     player.play(resource);
@@ -51,23 +55,19 @@ const play: Command = {
 
         if (!args.length) return message.channel.send('You need to provide a song name or URL to play!');
 
-        const songData = ytdl.validateURL(args[0])
-            ? (await ytdl.getInfo(args[0])).videoDetails
-            : await videoFinder(args.join(' '));
+        let url = '';
+        ytdl.validateURL(args[0]) ? (url = args[0]) : (url = await videoFinder(args.join(' ')));
 
-        if (!songData) return message.channel.send('Could not find any songs with that name or URL');
+        const songData = (await ytdl.getInfo(url)).videoDetails;
+        if (!songData) return message.channel.send('Could not find any songs :(');
 
         const song: Song = {
             title: songData.title,
-            url: '',
+            url: songData.video_url,
+            isLive: songData.isLiveContent,
+            description: songData.description ? songData.description : undefined,
+            length: parseInt(songData.lengthSeconds),
         };
-
-        // Typeguard to make linters happy
-        if ('url' in songData) {
-            song.url = songData.url;
-        } else {
-            song.url = songData.video_url;
-        }
 
         if (serverQueue) {
             serverQueue.songs.push(song);

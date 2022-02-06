@@ -4,6 +4,9 @@ import Discord from 'discord.js';
 export interface Song {
     title: string;
     url: string;
+    isLive: boolean;
+    description?: string;
+    length: number;
 }
 
 export interface Queue {

@@ -15,10 +15,8 @@ const stop: Command = {
         // SAFETY: message.guild will always be defined since message not sent to a guild won't have message.member.voice.channel defined checked above
         const serverQueue = queue.get(message.guild?.id as string);
 
-        if (!serverQueue) return message.channel.send('There are no more songs in queue!');
-
         queue.delete(message.guild?.id as string);
-        serverQueue.connection.destroy();
+        serverQueue?.connection.destroy();
 
         return message.channel.send('Bye bye :(');
     },
