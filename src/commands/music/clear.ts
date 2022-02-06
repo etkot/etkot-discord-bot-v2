@@ -1,11 +1,10 @@
 import Command from '../../types/command';
 import queue from '../../utils/queue';
-import { MessageEmbed } from 'discord.js';
 
-const musicQueue: Command = {
-    name: 'queue',
-    aliases: ['q', 'list', 'songs'],
-    description: 'Shows all songs currently in the queue',
+const clear: Command = {
+    name: 'clear',
+    aliases: ['c', 'empty'],
+    description: 'Clears the queue',
     execute: async (message, args, cmd, client) => {
         if (!message.guild) return;
 
@@ -22,17 +21,9 @@ const musicQueue: Command = {
             return message.channel.send(`There are no songs in the queue :(`);
         }
 
-        const embed = new MessageEmbed();
-        embed.setTitle('Queue :musical_note:');
-        const songs = serverQueue.songs;
-        embed.setDescription(
-            `Current song: **${songs[0].title}**\n\n${songs
-                .map((song, index) => `${index + 1}) ${song.title}`)
-                .join('\n')}`,
-        );
-
-        return message.channel.send({ embeds: [embed] });
+        serverQueue.songs = [];
+        return message.channel.send(`Cleared the queue`);
     },
 };
 
-export default musicQueue;
+export default clear;

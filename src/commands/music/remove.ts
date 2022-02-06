@@ -2,10 +2,10 @@ import Command from '../../types/command';
 import queue from '../../utils/queue';
 import { MessageEmbed } from 'discord.js';
 
-const musicQueue: Command = {
-    name: 'queue',
-    aliases: ['q', 'list', 'songs'],
-    description: 'Shows all songs currently in the queue',
+const remove: Command = {
+    name: 'remove',
+    aliases: ['r', 'delete', 'd'],
+    description: 'Removes a song from the queue',
     execute: async (message, args, cmd, client) => {
         if (!message.guild) return;
 
@@ -22,17 +22,14 @@ const musicQueue: Command = {
             return message.channel.send(`There are no songs in the queue :(`);
         }
 
-        const embed = new MessageEmbed();
-        embed.setTitle('Queue :musical_note:');
-        const songs = serverQueue.songs;
-        embed.setDescription(
-            `Current song: **${songs[0].title}**\n\n${songs
-                .map((song, index) => `${index + 1}) ${song.title}`)
-                .join('\n')}`,
-        );
-
-        return message.channel.send({ embeds: [embed] });
+        const removeIndex = args[0] ? parseInt(args[0]) - 1 : 0;
+        if (removeIndex < serverQueue.songs.length && removeIndex >= 0) {
+            serverQueue.songs.splice(removeIndex, 1);
+            return message.channel.send(`Removed **${serverQueue.songs[removeIndex].title}** from the queue`);
+        } else {
+            return message.channel.send(`Invalid index.`);
+        }
     },
 };
 
-export default musicQueue;
+export default remove;
