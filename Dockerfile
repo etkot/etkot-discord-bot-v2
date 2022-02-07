@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY tsconfig*.json ./
 COPY ./src ./src
-RUN npm install --quiet && npm run build
+RUN yarn && yarn build
 
 #
 # Production stage.
@@ -22,9 +22,9 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY package*.json ./
-RUN npm install --quiet --only=production
+RUN yarn install --production=true
 
 ## We just need the build to execute the command
 COPY --from=builder /usr/src/app/dist ./dist
 
-CMD ["npm", "run", "production"]
+CMD ["yarn", "production"]
