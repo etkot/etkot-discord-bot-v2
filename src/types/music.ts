@@ -1,4 +1,4 @@
-import { VoiceConnection } from '@discordjs/voice';
+import { AudioResource, VoiceConnection } from '@discordjs/voice';
 import Discord from 'discord.js';
 
 export interface Song {
@@ -9,9 +9,14 @@ export interface Song {
     length: number;
 }
 
+export interface Resource {
+    resource: AudioResource;
+    song?: Song;
+}
+
 export interface Queue {
     voice_channel: Discord.VoiceBasedChannel;
     text_channel: Discord.TextBasedChannel;
     connection: VoiceConnection;
-    songs: Song[];
+    resources: Resource[];
 }
