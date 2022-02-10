@@ -9,14 +9,16 @@ export interface Song {
     length: number;
 }
 
-export interface Resource {
+export interface Audio {
     resource: AudioResource;
     song?: Song;
+    text?: string;
 }
 
+/*
 export interface Queue {
     voice_channel: Discord.VoiceBasedChannel;
     text_channel: Discord.TextBasedChannel;
     connection: VoiceConnection;
     resources: Resource[];
-}
+} */

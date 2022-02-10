@@ -3,15 +3,14 @@ import Discord from 'discord.js';
 import ytSearch from 'yt-search';
 import ytdl from 'ytdl-core';
 import Command from '../../types/command';
-import { Queue, Song } from '../../types/music';
-import queue from '../../utils/queue';
+import { Song } from '../../types/music';
 
 const videoFinder = async (query: string) => {
     const video_result = await ytSearch(query);
     return video_result.all.length > 1 ? video_result.all[0].url : '';
 };
 
-export const videoPlayer = async (guild: Discord.Guild, song: Song) => {
+const videoPlayer = async (guild: Discord.Guild, song: Song) => {
     const songQueue = queue.get(guild.id);
     if (!songQueue) return;
 
@@ -51,7 +50,7 @@ const play: Command = {
         if (!permissions.has('CONNECT')) return message.channel.send(`You don't have persmission to do that`);
 
         // SAFETY: message.guild will always be defined since message not sent to a guild won't have message.member.voice.channel defined checked above
-        const serverQueue = queue.get(message.guild?.id as string);
+        //const serverQueue = queue.get(message.guild?.id as string);
 
         if (!args.length) return message.channel.send('You need to provide a song name or URL to play!');
 

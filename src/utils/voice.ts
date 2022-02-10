@@ -1,12 +1,12 @@
+import Discord from 'discord.js';
 import { VoiceConnection } from '@discordjs/voice';
-import { Queue } from '../types/music';
+import { Audio } from '../types/music';
 
 class Voice {
-  _connection: VoiceConnection | undefined = undefined;
-  _resourceQueue: Queue | undefined = undefined;
-
-  set connection(connection: VoiceConnection) {this.connection = connection};
-  set resourceQueue(queue: Queue) {this._resourceQueue = queue}
+    voice_channel: Discord.VoiceBasedChannel | undefined;
+    text_channel: Discord.TextBasedChannel | undefined;
+    connection: VoiceConnection | undefined;
+    audioQueue: Audio[] = [];
 }
 
 const voice = new Voice();
