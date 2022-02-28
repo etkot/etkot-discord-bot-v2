@@ -41,6 +41,14 @@ const play: Command = {
     name: 'play',
     aliases: ['p'],
     description: 'Plays a song from YouTube',
+    options: [
+        {
+            type: 'STRING',
+            name: 'Search term or URL',
+            description: 'Search term or URL of the video to play',
+            required: true,
+        },
+    ],
     execute: async (message, args, cmd, client) => {
         if (!message.guild) return;
 
