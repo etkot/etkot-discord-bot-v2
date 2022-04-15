@@ -14,4 +14,5 @@ export interface Queue {
     text_channel: Discord.TextBasedChannel;
     connection: VoiceConnection;
     songs: Song[];
+    wappu?: boolean;
 }
