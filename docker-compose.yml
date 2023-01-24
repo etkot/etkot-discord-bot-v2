@@ -1,0 +1,6 @@
+version: '2.1'
+services:
+    discord:
+        build: .
+        environment:
+            - DC_TOKEN=token
