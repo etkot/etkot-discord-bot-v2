@@ -1,10 +1,17 @@
-import Discord, { ApplicationCommandOptionData } from 'discord.js';
-import Client from './client';
+import type {
+    AutocompleteInteraction,
+    ChatInputCommandInteraction,
+    SlashCommandBuilder,
+    SlashCommandSubcommandsOnlyBuilder,
+} from 'discord.js'
 
-export default interface Command {
-    name: string;
-    aliases: string[];
-    description: string;
-    options?: ApplicationCommandOptionData[];
-    execute: (message: Discord.Message, args: string[], cmd: string, client: Client) => void;
+type possibleData =
+    | SlashCommandBuilder
+    | SlashCommandSubcommandsOnlyBuilder
+    | Omit<SlashCommandBuilder, 'addSubcommand' | 'addSubcommandGroup'>
+
+export interface Command {
+    data: possibleData
+    execute: (interaction: ChatInputCommandInteraction) => Promise<void>
+    autocomplete?: (interaction: AutocompleteInteraction) => Promise<void>
 }
