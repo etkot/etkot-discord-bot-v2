@@ -5,17 +5,28 @@ import {
     entersState,
     getVoiceConnection,
     joinVoiceChannel,
+    VoiceConnection,
     VoiceConnectionStatus,
 } from '@discordjs/voice'
 import type { VoiceBasedChannel } from 'discord.js'
 
-export const getConnection = (voiceChannel: VoiceBasedChannel) => {
+export function getConnection(voiceChannel: VoiceBasedChannel, createIfNotFound: true): VoiceConnection
+export function getConnection(voiceChannel: VoiceBasedChannel, createIfNotFound?: boolean): VoiceConnection | undefined
+export function getConnection(
+    voiceChannel: VoiceBasedChannel,
+    createIfNotFound?: boolean
+): VoiceConnection | undefined {
     const connection = getVoiceConnection(voiceChannel.guildId)
-    if (!connection) {
+
+    if (!connection && createIfNotFound) {
         return createConnection(voiceChannel)
     }
 
-    if (connection.joinConfig.channelId !== voiceChannel.id) {
+    if (!connection && !createIfNotFound) {
+        return undefined
+    }
+
+    if (connection && connection.joinConfig.channelId !== voiceChannel.id) {
         connection.destroy()
         return createConnection(voiceChannel)
     }
@@ -65,10 +76,10 @@ export const createConnection = (voiceChannel: VoiceBasedChannel) => {
 }
 
 export const addToQueue = (VoiceChannel: VoiceBasedChannel, audio: AudioResource<{ title: string }>) => {
-    const connection = getConnection(VoiceChannel)
-    connection.queue.push(audio)
+    const connection = getConnection(VoiceChannel, true)
+    connection?.queue.push(audio)
 
-    if (connection.player.state.status === 'idle') {
+    if (connection?.player.state.status === 'idle') {
         playNext(VoiceChannel)
     }
 
@@ -76,7 +87,7 @@ export const addToQueue = (VoiceChannel: VoiceBasedChannel, audio: AudioResource
 }
 
 export const playNext = (voiceChannel: VoiceBasedChannel) => {
-    const connection = getConnection(voiceChannel)
+    const connection = getConnection(voiceChannel, true)
     const next = connection.queue.shift()
 
     if (next) {
@@ -87,25 +98,27 @@ export const playNext = (voiceChannel: VoiceBasedChannel) => {
 
 export const pause = (voiceChannel: VoiceBasedChannel) => {
     const connection = getConnection(voiceChannel)
-    connection.player.pause()
+    connection?.player.pause()
 }
 
 export const resume = (voiceChannel: VoiceBasedChannel) => {
     const connection = getConnection(voiceChannel)
-    connection.player.unpause()
+    connection?.player.unpause()
 }
 
 export const clearQueue = (voiceChannel: VoiceBasedChannel) => {
     const connection = getConnection(voiceChannel)
+    if (!connection) return
+
     connection.queue = []
 }
 
 export const skip = (voiceChannel: VoiceBasedChannel) => {
     const connection = getConnection(voiceChannel)
-    connection.player.stop()
+    connection?.player.stop()
 }
 
 export const leave = (voiceChannel: VoiceBasedChannel) => {
     const connection = getConnection(voiceChannel)
-    connection.destroy()
+    connection?.destroy()
 }
