@@ -1,0 +1,7 @@
+{
+    "watch": ["src"],
+    "ignore": ["src/**/*.test.ts", "node_modules"],
+    "ext": "ts,mjs,js,json,graphql",
+    "exec": "node scripts/build.js && node --experimental-loader ./scripts/loader.js ./dist/index.js",
+    "legacyWatch": true
+}
